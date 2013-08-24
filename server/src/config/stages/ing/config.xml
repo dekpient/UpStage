@@ -1,0 +1,19 @@
+<stage onstagelist="on" name="Ing" created="2013-08-24 21:18:59.876685" lockstage="false" active="active" id="ing">
+<splash>This is my test stage. You need to edit stage and select 'print debug messages'.</splash>
+<showdebugscreen>DEBUG</showdebugscreen>
+<avatar media="library:F5nH6cZi:VideoOverlay" voice="" name="ing" showname="show">
+</avatar>
+<avatar media="helen_av.swf" voice="nonexistant" name="name_avatar" showname="show">
+</avatar>
+<access_one>admin</access_one>
+<access_two>
+</access_two>
+<access_three>
+</access_three>
+<chatbgcolour>0xFFFFFF</chatbgcolour>
+<toolsbgcolour>0xFFFFFF</toolsbgcolour>
+<pagebgcolour>0xFFFFFF</pagebgcolour>
+<onstagelist>on</onstagelist>
+<lockstage>false</lockstage>
+<towner>admin</towner>
+</stage>
