@@ -1,1 +1,0 @@
-COPY /Y "bin\*" "..\html\swf\"
