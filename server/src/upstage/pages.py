@@ -991,7 +991,7 @@ class StageEditPage(Workshop):
                     return errorpage(request, e)
         elif 'new_stage' in self.stagename:
             #Modified by: Daniel, Gavin - Made the message to contain a <form> as well so it shows on the popup box.
-            self.message = '<form action="/admin/workshop/stage"> Full name:<input type="text" name="name" id="name" />Short name for url:<input type="text" name="ID" id="urlname" size="12" />(no spaces).<button onclick="javascript:stageCreate(); return false;">Create Stage</button></form>'  
+            self.message = '<form action="/admin/workshop/stage"> Full name:<input type="text" name="name" id="name" />Short name for url:<input type="text" name="ID" id="urlname" size="12" />(no spaces).<button onclick="javascript:stageChooseSubmit(); return false;">Create Stage</button></form>' # old page uses stageCreate();
         elif action=='save':
             if self.stage:
                 self.stage.update_from_form(form, self.player);
