@@ -1,3 +1,6 @@
+# exclude .pyc
+server/src/upstage/*.pyc
+
 #################
 ## Eclipse
 #################
