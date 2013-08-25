@@ -17,11 +17,11 @@
 */
 
 import upstage.Client;
-import flash.display.BitmapData;
+// import flash.display.BitmapData;
 import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.geom.Transform;
+// import flash.geom.Point;
+// import flash.geom.Rectangle;
+// import flash.geom.Transform;
 import upstage.thing.Thing;
 import upstage.thing.Prop;
 import upstage.view.Bubble;

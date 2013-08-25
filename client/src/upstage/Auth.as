@@ -22,7 +22,7 @@
  */ 
 
 import upstage.Client;
-import flash.external.ExternalInterface;
+// import flash.external.ExternalInterface;
 
 class upstage.Auth
 {

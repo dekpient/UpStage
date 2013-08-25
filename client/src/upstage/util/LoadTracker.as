@@ -103,34 +103,34 @@ class upstage.util.LoadTracker
      */
     static function getLoadListener(): Object
     {
-		trace('**getting LoadListener. expected is ' + LoadTracker.expected);
-        return {
-            onLoadError: function(mc :Object, error :String):Void {
-                LoadTracker.failed++;
-                LoadTracker.redraw();
-                LoadTracker.modelSplash.fail();    
+      trace('**getting LoadListener. expected is ' + LoadTracker.expected);
+      return {
+        onLoadError: function(mc :Object, error :String):Void {
+          LoadTracker.failed++;
+          LoadTracker.redraw();
+          LoadTracker.modelSplash.fail();    
 
-				trace('**Didnt load: ' + mc._name + ' because: ' + error);
-                Construct.deepTrace(LoadTracker);
-            },
-            onLoadComplete: function(mc :Object, httpStatus:Number):Void {
-                trace('Load Complete is done...');
-                trace('Loading of '+mc+' completed with (http) status ' + httpStatus);
-                LoadTracker.finished++;
-                ExternalInterface.call("stage_loading("+Math.floor(LoadTracker.finished*100/LoadTracker.expected) +")");
-                LoadTracker.redraw();
-				trace('**loaded ' + mc._name );
-                if(LoadTracker.finished == LoadTracker.expected)
-                    LoadTracker.modelSplash.complete();
+          trace('**Didnt load: ' + mc._name + ' because: ' + error);
+          Construct.deepTrace(LoadTracker);
+          },
+          onLoadComplete: function(mc :Object, httpStatus:Number):Void {
+            trace('Load Complete is done...');
+            trace('Loading of '+mc+' completed with (http) status ' + httpStatus);
+            LoadTracker.finished++;
+            ExternalInterface.call("stage_loading("+Math.floor(LoadTracker.finished*100/LoadTracker.expected) +")");
+            LoadTracker.redraw();
+            trace('**loaded ' + mc._name );
+            if(LoadTracker.finished == LoadTracker.expected)
+            LoadTracker.modelSplash.complete();
             },
             onLoadStart: function(mc :Object):Void {
-                trace('Load started...');
-				trace('**started ' + mc._name );
-                LoadTracker.started++;
-                LoadTracker.redraw();
+              trace('Load started...');
+              trace('**started ' + mc._name );
+              LoadTracker.started++;
+              LoadTracker.redraw();
             }
+          }
         }
-    }
 
 
     /**
