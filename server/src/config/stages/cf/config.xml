@@ -1,5 +1,6 @@
 <stage onstagelist="on" name="CF Stage" created="2013-05-01 16:36:47.096534" lockstage="true" active="active" id="cf">
 <splash>Welcome to UpStage. This one works.</splash>
+<showdebugscreen>DEBUG</showdebugscreen>
 <lockstage>true</lockstage>
 <avatar media="library:F5nH6cZi:VideoOverlay" voice="" name="ing" showname="show">
 </avatar>

@@ -31,21 +31,22 @@ import upstage.view.DrawTools;
 import upstage.view.AuScrollBar;
 import upstage.model.ModelSounds;
 import upstage.model.TransportInterface;
+// import flash.external.ExternalInterface;
 
 /**
- * Author: 
+ * Author:
  * Modified by: Phillip Quinlan, Lauren Kilduff, Endre Bernhardt
  * Modified by: Wendy, Candy and Aaron 30/10/2008
  * Purpose: Handles messages that affect avatars. Stores information about Avatars.
- * Notes: 
- * Modified by: Vibhu Patel 08/08/2011 - Added makemenu which creates a right click menu. 
+ * Notes:
+ * Modified by: Vibhu Patel 08/08/2011 - Added makemenu which creates a right click menu.
  * Modified by: Vibhu Patel 31/08/2011 - Added field and function to store and set the background color of tool box items.
  * Modified by: Daniel han	13/09/2012 - Added contextmenu for drawables.
  * Modified by: Daniel Han	14/09/2012 - Added layer parameter under draw_line draw_move methods to calculate and send avatar relational position of drawing.
  * Modified by: Craig Farrell	11/04/2013 - added new varible 'rotateClockWise' boolean.
  *                                         - added  rotate left(ani-clockwise)
  *                                         - added new right click 'rotate avatar left' menu item.
- *                                         
+ *
  */
 class upstage.model.ModelAvatars implements TransportInterface
 {
@@ -70,7 +71,6 @@ class upstage.model.ModelAvatars implements TransportInterface
     private var userID    :String;
     public var moveFast  :Boolean;
     public var rotateClockWise  :Boolean;//(11/04/2013) Craig
-    
 
     private var drawing   :Boolean;
     private var bAudioing  :Boolean; // PQ: Added
@@ -104,35 +104,35 @@ class upstage.model.ModelAvatars implements TransportInterface
     {
         trace('ModelAvatar.drawScreen');
         this.propIcons = ItemGroup.create(stage, "propIcons",
-                                          Client.L_PROP_FRAME, 
+                                          Client.L_PROP_FRAME,
                                           Client.PROP_BOX_X, Client.PROP_BOX_Y, NumPropBackGroundColour, this);
 
         this.actorButtons = ActorButtons.create(stage, 'actorButtons',
-                                                Client.L_BUTTONS_FRAME, 
+                                                Client.L_BUTTONS_FRAME,
                                                 Client.RIGHT_BOUND, Client.AV_UI_BUTTON_Y, this, this.avscrollBarColor);
 
         this.drawTools = DrawTools.create(stage, 'drawTools',
-                                          Client.L_DRAW_TOOLS, 
+                                          Client.L_DRAW_TOOLS,
                                           Client.RIGHT_BOUND, Client.CONTROL_Y, this, this.avscrollBarColor);
 
         this.audioScrollBar = AuScrollBar.create(stage, 'audioScrollBar',
-                                                 Client.L_AUDIO_TOOLS, Client.RIGHT_BOUND, 
+                                                 Client.L_AUDIO_TOOLS, Client.RIGHT_BOUND,
                                                  Client.CONTROL_Y, this, this.modelsounds, this.avscrollBarColor);
-                                                 
+
 		// AC (24/04/08) - Sets up the list of available audio files from the audio tools
 		this.modelsounds.setAudioScrollbar(this.audioScrollBar);
-		
+
         this.avScrollBar = AvScrollBar.create(stage, 'avScrollBar',
-                                              Client.L_SCROLL_FRAME, Client.RIGHT_BOUND, 
-                                              Client.CONTROL_Y, this, this.avscrollBarColor);       
-                                             
-                 	                    
+                                              Client.L_SCROLL_FRAME, Client.RIGHT_BOUND,
+                                              Client.CONTROL_Y, this, this.avscrollBarColor);
+
+
         //this.setDrawMode(false);
         //this.setAudioMode(false); //PQ: Added 22.9.07
-        
-        /* 
-        AC (24/04/08) - For inital stage loading as the 
-        setDrawMode(false) and setAudioMode(false) caused 
+
+        /*
+        AC (24/04/08) - For inital stage loading as the
+        setDrawMode(false) and setAudioMode(false) caused
         issues with the display of prop and backdrop scroll buttons.
         */
 		this.setInitialState();
@@ -160,35 +160,35 @@ class upstage.model.ModelAvatars implements TransportInterface
         this.drawTools._visible = false;
         this.audioScrollBar._visible = false; //PQ: Added 23.9.07
     }
-    
+
     /**
      * LK added 15/10/07
      * @brief Hide the Prop Scroll Bars
      */
     function hidePropScrollButtons(hide:Boolean)
     {
-    	this.propIcons.hideScrollButtons(hide); 
+    	this.propIcons.hideScrollButtons(hide);
     }
-    
+
     function show()
     {
     	this.actorButtons._visible = true;
         this.avScrollBar._visible = true;
         this.propIcons._visible = true;
         this.drawTools._visible = true;
-        
+
         // AC (23/04/08) - Added to display scrollbuttons if were already displayed.
         this.propIcons.left._visible = (this.propIcons.canDisplayButtons); // LK added 10/10/07
         this.propIcons.right._visible = (this.propIcons.canDisplayButtons); // LK added 10/10/07
-   
+
         this.audioScrollBar._visible = false; //PQ: Added 23.9.07
     }
 
 	// AC: Added 17/04/08
 	function setVolunteerMode(volunteer:Boolean){
-		// Show only what is needed to use volunteer avatars.	
+		// Show only what is needed to use volunteer avatars.
 	}
-	
+
 	// AC (24/04/08) - For initial stage loading.
 	function setInitialState(){
 		this.drawTools._visible = false;
@@ -209,14 +209,14 @@ class upstage.model.ModelAvatars implements TransportInterface
         this.actorButtons._visible = ! draw;
         this.avScrollBar._visible = ! draw;
         this.propIcons._visible = ! draw;
-        
+
         if (this.propIcons.canDisplayButtons) {
         	this.propIcons.left._visible = ! draw; // AC added 24/04/08
         	this.propIcons.right._visible = ! draw; // AC added 24/04/08
         }
 
     }
-    
+
     // PQ: Added 22.9.07
     function setAudioMode(bInAudioMode:Boolean){
         trace('Toggled audio widget');
@@ -225,12 +225,12 @@ class upstage.model.ModelAvatars implements TransportInterface
         this.actorButtons._visible = ! bInAudioMode;
         this.avScrollBar._visible = ! bInAudioMode;
         this.propIcons._visible = ! bInAudioMode;
-        
+
         if (this.propIcons.canDisplayButtons) {
         	this.propIcons.left._visible = ! bInAudioMode; // AC added 24/04/08
         	this.propIcons.right._visible = ! bInAudioMode; // AC added 24/04/08
         }
-        
+
         /*if ((bInAudioMode) && (this.propIcons.canDisplayButtons)) {
         	this.propIcons.left._visible = false; // LK added 10/10/07
         	this.propIcons.right._visible = false; // LK added 10/10/07
@@ -263,7 +263,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 		this.sender.ROTATE_AVATAR();
 	}
 
-	
+
     //-------------------------------------------------------------------------
     // Messages from ActorButtons
     /**
@@ -292,21 +292,21 @@ class upstage.model.ModelAvatars implements TransportInterface
 				var nextLayer:Number = undefined;
 				for (var i:String in this.avatars) {
 					var tempAv:Avatar = this.avatars[i];
-					
+
 					if ((tempAv.baseLayer > thisLayer) && ((tempAv.baseLayer < nextLayer) || (nextLayer == undefined))) {
 						otherAv = tempAv;
 						nextLayer = tempAv.baseLayer;
 					}
 				}
-				
+
 				if (nextLayer != undefined) {
 					av.move_to_layer(nextLayer);
 					this.sender.NB('move_layer_up layer:', nextLayer);
 					this.sender.AVLAYER(av.ID, nextLayer);
-	
+
 					if (otherAv != null) {
 						otherAv.move_to_layer(thisLayer);
-	
+
 						var avMC:MovieClip = av.image._parent;
 						var otherMC:MovieClip = otherAv.image._parent;
 						avMC.swapDepths(otherMC);
@@ -315,7 +315,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 				//  SHOULD SWAP MC TO NEW DEPTH EVEN IF THERE IS NO OTHERAV ?
 		}
 	}
-	
+
 	/**
 	 * @brief View asked to move the avatar down a layer
 	 */
@@ -324,19 +324,19 @@ class upstage.model.ModelAvatars implements TransportInterface
 		var av: Avatar = this.avatar;
 		if (av)
 		{
-			
+
 		var thisLayer:Number = av.baseLayer;
 			var otherAv:Avatar = null;
 			var previousLayer:Number = undefined;
 			for (var i:String in this.avatars) {
 				var tempAv:Avatar = this.avatars[i];
-				
+
 				if ((tempAv.baseLayer < thisLayer) && ((tempAv.baseLayer > previousLayer) || (previousLayer == undefined))) {
 					otherAv = tempAv;
 					previousLayer = tempAv.baseLayer;
 				}
 			}
-			
+
 			if (previousLayer != undefined) {
 				av.move_to_layer(previousLayer);
 				this.sender.NB('move_layer_down layer:', previousLayer);
@@ -373,7 +373,7 @@ class upstage.model.ModelAvatars implements TransportInterface
                         this.sender.EXIT(i);
                     }
             }
-        
+
     };
 
 
@@ -386,7 +386,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 
         // Stop on this players PC -- cosmetic only, and probably bad
         // you really want to see what others see.
-        //this.avatar.stopWalk(); 
+        //this.avatar.stopWalk();
 
         // send out stop message
         var av   :Avatar = this.avatar;
@@ -425,7 +425,20 @@ class upstage.model.ModelAvatars implements TransportInterface
                 this.sender.PROP(propID);
             }
     }
-    
+
+    // Toggle audio of streaming avatar - send as number for easy casting back and forth between Number/Boolean
+    function TOGGLE_STREAM_AUDIO()
+    {
+        this.sender.TOGGLE_STREAM_AUDIO(Number(!this.avatar.isMuted));
+    }
+
+    function GET_STREAM_AUDIO(avID:Number, muteStatus:Boolean)
+    {
+        // ExternalInterface.call("alert", "beforeSet: muteStatus = " + muteStatus + ", isMuted = " + avatars[avID].isMuted);
+        avatars[avID].isMuted = muteStatus;
+        // ExternalInterface.call("alert", "afterSet: isMuted = " + avatars[avID].isMuted);
+        avatars[avID].setVolumeAccordingToMuteStatus();
+    }
 
 
     //-------------------------------------------------------------------------
@@ -472,7 +485,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 		{
 			var av: Avatar = this.avatar;
 			av.drawable.globalToLocal(dPoint);
-			
+
 		}
         this.sender.DRAW_LINE(dPoint.x, dPoint.y);
     }
@@ -485,7 +498,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 			var av: Avatar = this.avatar;
 			av.drawable.globalToLocal(dPoint);
 		}
-		
+
         this.sender.DRAW_MOVE(dPoint.x, dPoint.y);
     }
 
@@ -497,7 +510,7 @@ class upstage.model.ModelAvatars implements TransportInterface
     function SET_DRAW_VIS(layer:Number, alpha:Number, visible:Boolean)
     {
         trace("SET_DRAW_VIS got " + layer + " alpha "+ alpha + " visible " + visible);
-                
+
         this.sender.DRAW_VIS(layer, alpha, visible);
     }
 
@@ -508,7 +521,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 
     function SET_DRAW_LAYER(layer:Number)
     {
-		
+
         this.sender.DRAW_LAYER(layer);
         /* send the draw style. due to bad separation this is a bit
            hacky Another way would be to actually adopt the settings
@@ -516,11 +529,11 @@ class upstage.model.ModelAvatars implements TransportInterface
         //this.drawTools.lastColour = 0;
         //this.drawTools.perhapsSetStyle();
     }
-    
+
     function GET_DRAW_TOOLS(colour:Number, alpha:Number, size:Number)
     {
         this.drawTools.setDrawStyle(colour, alpha, size);
-    } 
+    }
 
     function GET_DRAW_VIS(layer:Number, visible:Boolean, alpha:Number){
         this.drawTools.GET_DRAW_VIS(layer, visible, alpha);
@@ -530,7 +543,7 @@ class upstage.model.ModelAvatars implements TransportInterface
         this.drawTools.clearTrace(x, y);
     }
 
-    function GET_DRAW_LAYER_STATE(layers: Array){	
+    function GET_DRAW_LAYER_STATE(layers: Array){
 	this.drawTools.layerPicker.setActiveLayers(layers);
         this.drawTools.cueStyleResend();
     }
@@ -588,38 +601,49 @@ class upstage.model.ModelAvatars implements TransportInterface
                 modelAv.avScrollBar.rename(av.icon, av.tf.text);
                 av.tf.type = "dynamic";
                 modelAv.renaming = false;
-            } 
+            }
         });
-		
-		
+
+
         renameMenuItem.separatorBefore = true;
 
 		/**
 		 * Daniel Han 13/09/2012
 		 * #MENU
 		 */
-		
+
 		var drawAvatarMenuItem:ContextMenuItem = new ContextMenuItem("Draw On Avatar", function(){
             modelAv.setDrawMode(true);
 			modelAv.SET_DRAW_LAYER(4);
-			
+
         });
-		
+
 		var clearDrawingMenuItem:ContextMenuItem = new ContextMenuItem("Clear Draw On Avatar", function(){
             modelAv.SET_DRAW_CLEAR(4);
 			modelAv.setLastStyle();
         });
-		
+
 		var rotateAvatarRightMenuItem:ContextMenuItem = new ContextMenuItem("Rotate Avatar Right", function(){
             modelAv.SET_ROTATE_AVATAR(true);//(11/04/2013) Craig
         });
-        
+
         var rotateAvatarLeftMenuItem:ContextMenuItem = new ContextMenuItem("Rotate Avatar Left", function(){//(11/04/2013) Craig
             modelAv.SET_ROTATE_AVATAR(false);
         });
-		
+
 		drawAvatarMenuItem.separatorBefore = true;
-		
+
+        // Mute/Unmute streaming avatar - Ing - 28/8/13
+        if (av.isStream) {
+            var toggleAudioMenuItem:ContextMenuItem = new ContextMenuItem("Toggle Mute/Unmute", function(){
+                modelAv.TOGGLE_STREAM_AUDIO();
+            });
+
+            // add it at the top
+            rotateAvatarRightMenuItem.separatorBefore = true;
+            myMenu.customItems.push(toggleAudioMenuItem);
+        }
+
         myMenu.customItems.push(rotateAvatarRightMenuItem,rotateAvatarLeftMenuItem, moveupMenuItem, movedownMenuItem, movefastMenuItem, moveSlowMenuItem, drawAvatarMenuItem, clearDrawingMenuItem, renameMenuItem);
 
         av.menu = myMenu;
@@ -629,7 +653,7 @@ class upstage.model.ModelAvatars implements TransportInterface
 	{
 		this.drawTools.setLastStyle();
 	}
-	
+
     /*
     * Vibhu Patel 08/08/2011 - Used to hide a right click menu for a selected avatar.
     */
@@ -694,7 +718,7 @@ class upstage.model.ModelAvatars implements TransportInterface
         // Make sure avaiable is set correctly for people who arrive late...
         av.setPosition(x, y, z);
     }
-    
+
     /**
      * @brief Get the avatar specified and move them to the new layer.
      *        This is called after an incoming broadcast message from the server.
@@ -703,29 +727,29 @@ class upstage.model.ModelAvatars implements TransportInterface
     function GET_AVLAYER(avID: Number, newLayer:Number)
     {
 		var av:Avatar = this.avatars[avID];
- 
+
     	var thisLayer:Number = av.baseLayer;
 		//av.move_to_layer(newLayer);
 
     	var otherAv:Avatar;
 		for (var i:String in this.avatars) {
 			var tempAv:Avatar = this.avatars[i];
-			
+
 			if (tempAv.baseLayer == newLayer) {
-				otherAv = tempAv;	
+				otherAv = tempAv;
 			}
 		}
 
 		av.move_to_layer(newLayer);
-		
+
 		if (otherAv != null) {
 			otherAv.move_to_layer(thisLayer);
-			
+
 			var avMC:MovieClip = av.image._parent;
 			var otherMC:MovieClip = otherAv.image._parent;
 			avMC.swapDepths(otherMC);
 		}
-    	
+
     }
 
 
@@ -810,10 +834,10 @@ class upstage.model.ModelAvatars implements TransportInterface
     {
         this.avatars[avID].think(text);
     }
-    
+
     /**
      * Shout Feature
-     * Wendy, Candy and Aaron 
+     * Wendy, Candy and Aaron
      * 30/10/08
      */
     function GET_SHOUT(avID :Number, text :String) :Void
@@ -871,11 +895,11 @@ class upstage.model.ModelAvatars implements TransportInterface
         {
             avatars[avID].setRotation(90);
         }
-        else 
+        else
         {
             avatars[avID].setRotation(-90);//(11/04/2013) Craig
         }
-		
+
 	}
 
 
@@ -887,7 +911,7 @@ class upstage.model.ModelAvatars implements TransportInterface
     function clicker(mouseX :Number, mouseY :Number) :Void
     {
         if (! this.drawing)
-            this.SET_MOVE(mouseX, mouseY);            
+            this.SET_MOVE(mouseX, mouseY);
     };
 
 
@@ -899,7 +923,7 @@ class upstage.model.ModelAvatars implements TransportInterface
         if (userID)
             this.userID = userID;
     };
-    
+
     /** AB - 02-08-08
      * @brief Set Prop Pane Background Color
      */

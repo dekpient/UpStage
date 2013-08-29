@@ -1094,7 +1094,19 @@ class _Stage(object):
                             thickness=x[2], alpha=x[3], layer=4, AV=k)
                 elif x[0] == 'ROTATE_AVATAR':
                     socket.send('ROTATE_AVATAR', AV=x[1])
-            
+
+    # Toggle streaming avatar audio
+    def toggle_stream_audio(self, isMuted, avid=None):
+        if avid is None:
+            log.msg('Avatar ID cannot be None type')
+        else:
+            if avid in self.draw_avatar_stacks:
+                self.draw_avatar_stacks[avid].append(('TOGGLE_STREAM_AUDIO', avid, isMuted))
+            else:
+                self.draw_avatar_stacks[avid] = [('TOGGLE_STREAM_AUDIO', avid, isMuted)]
+            # log.msg("in stage.py, ready to broadcast, mute=" + isMuted);
+            self.broadcast('TOGGLE_STREAM_AUDIO', AV=avid, MUTED=isMuted);
+
     def broadcast_numbers(self):
         """Broadcast player, audience count to players"""
         p = len(self.player_sockets)

@@ -645,6 +645,10 @@ class _UpstageSocket(LineOnlyReceiver):
     def handle_ROTATE_AVATAR(self):
         self.stage.rotate_avatar(self.avatar.ID)
 
+    def handle_TOGGLE_STREAM_AUDIO(self, isMuted):
+        # log.msg('in server.py, isMuted = ' + isMuted)
+        self.stage.toggle_stream_audio(isMuted, self.avatar.ID)
+
 
 class SocketFactory(Factory):
     """Produces _UpstageSocket instances"""

@@ -31,14 +31,14 @@ import upstage.model.ModelDrawing;
 
 
 /**
- * Author: 
+ * Author:
  * Modified by: Phillip Quinlan, Lauren Kilduff, Endre Bernhardt, Alan Crow
  * Modified by: Wendy, Candy and Aaron 30/10/2008
  * Modified by: Vishaal Solanki 15/10/09
  * Modified by: Heath / Vibhu 09/08/2011 - Added function CHAT_COLOUR so part of fix for media management system colour changing.
  * Modified by: Vibhu 31/08/2011 - Added function PAGE_COLOUR and TOOL_COLOUR so part of fix for media management system colour changing.
  * Modified by: Craig Farrell 07/05/2013 - added this.satge.debug(msg) so when something is called it is put on screen if debug is on
- * Notes: 
+ * Notes:
  */
 
 class upstage.Transport extends XMLSocket
@@ -66,7 +66,7 @@ class upstage.Transport extends XMLSocket
     public var policyport  :Number;
     public var stageID     :String;
     //public var player      :String;
-    
+
     static var volunteer  :Boolean;
 
     /**
@@ -76,17 +76,17 @@ class upstage.Transport extends XMLSocket
     function Transport(stage :MovieClip)
     {
     	super();  // Call XMLSocket constructor
-    	
+
         trace('Transport constructor...');
 
         this.stage = stage;
-        
+
         this.connectionTried = 0;
 
         this.parseUrlVars();
 
         this.sender = new Sender(this);
-		
+
         // Create new handlers for events
         //---------------------------------------------------------------------
 
@@ -94,19 +94,19 @@ class upstage.Transport extends XMLSocket
         this.modelSplashScreen = new ModelSplashScreen(sender);
 
         // Order of other handlers doesn't really matter
-		
+
         /** EB 22/10/07: EXCEPT!! Make modelSounds before modelAvatars
-         * 
+         *
          * modelAvatars (for some reason known only to Douglas or the previous team)
          * is responsible for the interface controls. When it is created, the
-         * audioScrollBar is created. To create linkage between the audioscrollbar 
+         * audioScrollBar is created. To create linkage between the audioscrollbar
          * and ModelSounds (so the AudioSlot objects have the MS object to update to),
          * the ModelSounds object needs to be provided to the constructor for modelAvatars.
          * Then the audioScrollBar needs to be passed back to ModelSounds after modelAvatars
          * has been created. This kind of restriction may be indicative of an architectural
          * problem but it's a bit late in the day for us to look at it indepth now.
          * Sorry, it's what we have to work with for now..
-         * 
+         *
          */
         //this.modelSounds = new ModelSounds(sender); //PQ: Added sender
         //this.modelAvatars = new ModelAvatars(sender, stage, this.modelSounds);
@@ -118,9 +118,9 @@ class upstage.Transport extends XMLSocket
         this.modelSounds = new ModelSounds(sender, this.modelChat); //PQ: Added sender
         this.modelAvatars = new ModelAvatars(sender, stage, this.modelSounds);
         this.modelDrawing = new ModelDrawing(sender, stage);
-        
+
         volunteer = false;
-        
+
         // True application execution begins when auth finishes load
         this.auth = new Auth();
         //this.auth.load(this.drawScreen);
@@ -130,9 +130,9 @@ class upstage.Transport extends XMLSocket
     };
 
     function parseUrlVars() {
-		
+
 		// TODO set defaults if no vars are given?
-		
+
         trace("parsing url vars");
         var args:String = _root._url.split('?')[1];
         var decoder:LoadVars = new LoadVars();
@@ -148,7 +148,7 @@ class upstage.Transport extends XMLSocket
 
 
     /**
-     * @brief EventHandler 
+     * @brief EventHandler
      * This onConnect function is used to check and return if the connection
      * successful or not, if not try a maximum of Client.MAX_CONNECTION_ATTEMPTS
      * (probably 4) times.
@@ -184,7 +184,7 @@ class upstage.Transport extends XMLSocket
 
 
     /**
-     * EventHandler 
+     * EventHandler
      * This onClose function is used for XMLSocket callback
      */
     function onClose() : Void
@@ -204,7 +204,7 @@ class upstage.Transport extends XMLSocket
         // tries to connect to server as specified in server object
         // fails very plainly - there's not much that can be done.
         var connected : Boolean = false;
-        
+
         var lc: LocalConnection = new LocalConnection();
 		var domain: String = lc.domain();
 
@@ -213,7 +213,7 @@ class upstage.Transport extends XMLSocket
 				var policyfile : String = 'xmlsocket://' + domain + ':' + this.policyport.toString();
 				trace('aquire policyfile ' + policyfile );
        			System.security.loadPolicyFile(policyfile);
-            	
+
                 trace('attemptConnect() - trying to connect to ' + this.swfport);
                 connected = this.connect(null, this.swfport);
             }
@@ -221,7 +221,7 @@ class upstage.Transport extends XMLSocket
         if (! connected)
             {
                 trace('attemptConnect() - connection failed');
-                displayConnectionLost('connection failed!'); 
+                displayConnectionLost('connection failed!');
             }
     };
 
@@ -237,7 +237,7 @@ class upstage.Transport extends XMLSocket
     }
 
     /**
-     * @brief EventHandler 
+     * @brief EventHandler
      * Called when data received from server
      * Data dispatched to Receiver class
      * Event Handler for XMLSocket
@@ -290,10 +290,10 @@ class upstage.Transport extends XMLSocket
         // Will draw appropriate screen for
         // Players and audience.
         this.modelDrawing.drawScreen(this.stage);
-        
+
         //this.modelAvatars.drawScreen(this.stage);// AB - Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
         //this.modelBackDropItems.drawScreen(this.stage);// AB - Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
-		
+
         if (this.auth.getCanAct()){
             trace("can act...");
             this.modelChat.drawScreen(this.stage);
@@ -308,7 +308,7 @@ class upstage.Transport extends XMLSocket
         	//this.modelBackDropItems.hide(); ///XXX why draw it all then? // AB - (4.8.08) Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
         	//this.modelAvatars.hidePropScrollButtons(true); // LK added 10/10/07 // AB - (4.8.08) Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
             //this.modelBackDropItems.hideBackDropScrollButtons(true); // AC added 18/04/08 // AB - (4.8.08) Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
-        	
+
         	if (volunteer) {
         		// LK added 24/9/07`
         		this.modelChat.drawScreen(this.stage);
@@ -316,21 +316,21 @@ class upstage.Transport extends XMLSocket
 				this.modelAvatars.setAudioMode(false);
 				trace('transport has redrawscreen');
         	}
-        	
+
         	else {
             	this.modelChat.drawScreenAudience(this.stage);//XXX less than good
             	//this.modelAvatars.hide();// AB - (4.8.08) Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
             	//this.modelBackDropItems.hide(); ///XXX why draw it all then? // AB - (4.8.08) Comment Out To  Add It To function BACKDROPANDPROP_COLOUR
             	//this.modelAvatars.hidePropScrollButtons(true); // LK added 10/10/07
-            	//this.modelBackDropItems.hideBackDropScrollButtons(true); // AC added 18/04/08   
+            	//this.modelBackDropItems.hideBackDropScrollButtons(true); // AC added 18/04/08
         	}
-        	
+
         }
         this.modelChat.focus();
         this.startPlay();
         trace('transport.drawScreen() done.');
     };
-    
+
     /**
 	 * LK added 31/10/07
 	 * @brief Shows volunteer view
@@ -363,13 +363,13 @@ class upstage.Transport extends XMLSocket
 		//this.drawScreen();
 		this.modelChat.DISP_VOLUNTEER_BTN();
 	}
-	
+
 	function VOL_LET_GO()
 	{
 		volunteer = false;
 		this.drawScreen();
 	}
-	
+
 	/**
 	 * LK added 30/10/07
 	 * @brief Hide volunteer button
@@ -383,7 +383,7 @@ class upstage.Transport extends XMLSocket
 	{
 		return volunteer;
 	}
-	
+
 	/**
 	 * LK added 17/10/07
 	 * @brief Display applause button
@@ -392,7 +392,7 @@ class upstage.Transport extends XMLSocket
 	{
 		this.modelChat.DISP_APPLA();
 	}
-	
+
 	/**
 	 * LK added 29/10/07
 	 * @brief Hide applause button
@@ -410,7 +410,7 @@ class upstage.Transport extends XMLSocket
         var avID :Number = x.ID;
         //var logtext :String  = '<' + x.name + '> ' + x.text;
 
-	// Modified by Endre to account for htmlText, and to delimit the 
+	// Modified by Endre to account for htmlText, and to delimit the
 	// actor name from the message when parsing text (primarily for
 	// when the url is the only/first string in the text
 	var logtext: String = '&lt;' + x.name + '&gt; ' + x.text;
@@ -438,21 +438,21 @@ class upstage.Transport extends XMLSocket
         var thought:String = x.thought;
         var name:String = this.modelAvatars.avatars[avID].name;
 
-		/* 
+		/*
 		 * modelChat.GET_THOUGHT() requires name and thought message
 		 * and adds the "{}" symbols. the logtext variable is not needed
 		 * within this method. - (Alan 01/11/07)
-		 */ 
+		 */
 		//var logtext: String = '{' + name + '} { ' + thought + ' }';
         //this.modelChat.GET_THOUGHT(logtext);
-        
+
         this.modelChat.GET_THOUGHT(name, thought);
         this.modelAvatars.GET_THOUGHT(avID, thought);
     }
-    
+
     /**
      *  Shout Feature
-     * Wendy, Candy and Aaron 
+     * Wendy, Candy and Aaron
      * 30/10/08
      */
     private function SHOUT(x :Object):Void
@@ -460,7 +460,7 @@ class upstage.Transport extends XMLSocket
         var avID:Number = x.ID;
         var shout:String = x.shout;
         var name:String = this.modelAvatars.avatars[avID].name;
-        
+
         this.modelChat.GET_SHOUT(name, shout);
         this.modelAvatars.GET_SHOUT(avID, shout);
     }
@@ -489,28 +489,28 @@ class upstage.Transport extends XMLSocket
 	private function EFFECT(x :Object) :Void
 	{
 		// Effects NOT IMPLEMENTED on server side
-		this.modelSounds.loadEffect(x.url);	
+		this.modelSounds.loadEffect(x.url);
 	}
-	
+
 	private function PLAY_CLIP(x :Object): Void
 	{
 		this.modelSounds.remotePlayClip(x.array, x.url);
 	}
-	
+
 	private function PAUSE_CLIP(x :Object): Void
 	{
 		this.modelSounds.remotePauseClip(x.array, x.url);
 	}
-	
+
 	private function LOOP_CLIP(x :Object): Void
 	{
 		this.modelSounds.remoteLoopClip(x.array, x.url);
 	}
-	
+
 	// PQ & LK: Added 31.10.07 - Play the applause sound
 	private function APPLAUSE_PLAY(x :Object): Void
 	{
-		this.modelSounds.playApplause(x.url);	
+		this.modelSounds.playApplause(x.url);
 	}
 
 	//EB 22/10/07 - to handle broadcast volume messages
@@ -519,30 +519,30 @@ class upstage.Transport extends XMLSocket
 		var type:String = x.type;
 		var url:String = x.url;
 		var volume:Number = Number(x.volume);
-		
+
 		this.modelSounds.remoteVolumeControl(type, url, volume);
 	}
-	
+
 	// PQ: 29.10.07 - To handle broadcast stop audio messages
 	private function STOPAUDIO(x :Object): Void
 	{
 		var type:String = x.type;
 		var url:String = x.url;
-		
+
 		trace("STOPAUDIO MESSAGE RECIEVED!!!");
-		
+
 		this.modelSounds.remoteStopAudio(type, url);
 	}
-	
-	
+
+
 	// AC: 29.05.08 - Clear Audio Slot
 	private function CLEAR_AUDIOSLOT(x: Object): Void
 	{
 		var type: String = x.type;
 		var url: String = x.url;
-		this.modelSounds.clearSlot(type, url);	
-	}	
-		
+		this.modelSounds.clearSlot(type, url);
+	}
+
     /**
      * @brief Called by server when client tries to login to same stage twice
      */
@@ -591,10 +591,21 @@ class upstage.Transport extends XMLSocket
         var ID :Number = Number(x.ID);
         var allowed :Boolean = (x.allowed == 'True');
         var available :Boolean = (x.available == 'True');
-        
+
     	this.modelAvatars.GET_LOAD_AV(ID, x.name, x.url, x.thumbnail, allowed,
                                       available, x.medium, x.frame, x.streamserver, x.streamname);
     };
+
+    // Ing - 28/8/13
+    private function MUTE_AV (x: Object) :Void
+    {
+        trace('MUTE_AV is called');
+    }
+
+    private function UNMUTE_AV (x: Object) :Void
+    {
+        trace('UNMUTE_AV is called');
+    }
 
 
     /**
@@ -628,16 +639,16 @@ class upstage.Transport extends XMLSocket
         var show :Boolean = (x.show == 'True');
         this.modelAvatars.GET_LOADPROP(ID, x.name, x.url, x.thumbnail, x.medium, show);
     };
-    
+
     private function LOAD_AUDIO (x :Object) :Void
     {
     	var ID : Number = x.ID;
     	var name : String = x.name;
     	var url :String = x.url;
     	var type : String = x.type;
-    	
+
     	this.modelSounds.GET_LOAD_AUDIO(ID, name, url, type);
-    	 
+
     }
 
 
@@ -716,7 +727,7 @@ class upstage.Transport extends XMLSocket
         var propID :Number = x.prop;
         this.modelAvatars.GET_BINDPROP(avID, propID);
     };
-    
+
     /**
      * @brief An avatar moved layer, get the model to update their display
      * @author Endre
@@ -804,9 +815,9 @@ class upstage.Transport extends XMLSocket
     	Construct.stageUrl = ('/stages/' + x.stageID);
         this.modelSplashScreen.GET_STAGE_NAME(x.stageName);
     }
-    
+
     /**
-     * @brief The server is telling the client what the background Colour of the 
+     * @brief The server is telling the client what the background Colour of the
      * Props and Background toolbar will be
      */
      // AB: 2.08.08 - Set Props and Background toolbar Color
@@ -815,11 +826,11 @@ class upstage.Transport extends XMLSocket
     	//Set the Avatar and Backdrop BG Color
     	this.modelAvatars.SET_PROP_PANE_COLOR(x.bgcolour)
     	this.modelBackDropItems.SET_BACKDROP_PANE_COLOR(x.bgcolour)
-    	
+
     	//Draw the Rectangles on stage If user is Actor
     	this.modelAvatars.drawScreen(this.stage);
     	this.modelBackDropItems.drawScreen(this.stage);
-    	
+
     	if (this.auth.getCanAct()){
             //If they Are actors - Do not hide Prop or backdrop Panes
         }
@@ -827,7 +838,7 @@ class upstage.Transport extends XMLSocket
         	this.modelBackDropItems.hide();
         	this.modelAvatars.hidePropScrollButtons(true);
             this.modelBackDropItems.hideBackDropScrollButtons(true);
-        	
+
         	if (volunteer) {
         		this.modelChat.drawScreen(this.stage);
 				this.modelAvatars.setDrawMode(false);
@@ -842,7 +853,7 @@ class upstage.Transport extends XMLSocket
    	}
 
     /**
-    * Heath / Vibhu 09/08/2011 - 
+    * Heath / Vibhu 09/08/2011 -
     * Fix for modifying the background colour of the chat. So that can be used with media management system.
     */
     private function CHAT_COLOUR(col: Object) :Void
@@ -902,7 +913,7 @@ class upstage.Transport extends XMLSocket
         trace('I got it on transport' + avID + "/" + frameNumber);
         this.modelAvatars.GET_FRAME(avID, frameNumber);
     }
-    
+
     // Aaron
     /*
      * @brief Change the backdrop frame
@@ -911,7 +922,7 @@ class upstage.Transport extends XMLSocket
 	{
 		var frameNumber :Number = x.frameNumber;
 		this.modelBackDropItems.SET_BACKDROP_FRAME(frameNumber);
-		
+
 	}
 
     /**
@@ -926,6 +937,15 @@ class upstage.Transport extends XMLSocket
 		ExternalInterface.call("stage_loaded()");
     }
 
+    // Toggle audio of streaming avatar
+    function TOGGLE_STREAM_AUDIO(msg:Object)
+    {
+      var avId:Number = Number(msg.AV);
+      var isMuted:Boolean = Boolean(Number(msg.MUTED));
+      // ExternalInterface.call("alert", "in Transport.as, isMuted=" + isMuted + ", msg = " + msg);
+      this.modelAvatars.GET_STREAM_AUDIO(avId, isMuted);
+    }
+
 
     /**-------------drawing tools ----------------**/
 
@@ -934,18 +954,18 @@ class upstage.Transport extends XMLSocket
 		var AVid:Number = Number(msg.AV);
 		this.modelAvatars.GET_ROTATE_AVATAR(AVid);
 	}
-	
+
     function DRAW_LINE(msg:Object) {
 		var layer:Number = Number(msg.layer);
 		var x_pos:Number = Number(msg.x);
 		var y_pos:Number = Number(msg.y);
 		var AVid:Number;
-		
-		
+
+
 		if (layer == 4)
 		{
 			AVid = Number(msg.AV);
-			
+
 			this.modelDrawing.GET_DRAW_LINE(layer,
                                         x_pos,
                                         y_pos,
@@ -954,7 +974,7 @@ class upstage.Transport extends XMLSocket
 		}
 		else
 		{
-		
+
         this.modelDrawing.GET_DRAW_LINE(layer,
                                         x_pos,
                                         y_pos);
@@ -970,11 +990,11 @@ class upstage.Transport extends XMLSocket
 		var x_pos:Number = Number(msg.x);
 		var y_pos:Number = Number(msg.y);
 		var AVid:Number;
-		
+
 		if (layer == 4)
 		{
 			AVid = Number(msg.AV);
-			
+
 			this.modelDrawing.GET_DRAW_MOVE(layer,
                                         x_pos,
                                         y_pos,
@@ -987,7 +1007,7 @@ class upstage.Transport extends XMLSocket
                                         x_pos,
                                         y_pos
 										);
-			
+
 		}
         //clear the trace markers
         //this.modelAvatars.GET_DRAW_LINE(Number(msg.x),
@@ -995,14 +1015,14 @@ class upstage.Transport extends XMLSocket
 
     }
 
-    
+
     function DRAW_STYLE(msg:Object) {
 		var layer:Number = Number(msg.layer);
 		var thickness:Number = Number(msg.thickness);
 		var colour:Number = Number(msg.colour);
 		var alpha:Number = Number(msg.alpha);
 		var AVid:Number;
-		
+
 		if (layer == 4)
 		{
 			AVid = Number(msg.AV);
@@ -1030,7 +1050,7 @@ class upstage.Transport extends XMLSocket
                                          Number(msg.alpha),
                                          Number(msg.thickness)
                                          );
-    } 
+    }
 
 
     function DRAW_VIS(msg:Object) {
@@ -1057,23 +1077,23 @@ class upstage.Transport extends XMLSocket
     }
 
     function DRAW_LAYER_STATE(msg:Object){
-	var i:Number;	
+	var i:Number;
 	var layers: Array = [];
 	for (i = 0; i < Client.DRAWING_LAYERS_N; i++){
 	    var ID:String = msg['L' + i];
 	    if (ID){
-		if (ID == this.auth.getUserName())	       
+		if (ID == this.auth.getUserName())
 		    layers.push(2);
 		else
 		    layers.push(1); //XXX could have it saying who is using the layer.
 	    }
 	    else
 		layers.push(0);
-	}	
+	}
 	this.modelAvatars.GET_DRAW_LAYER_STATE(layers);
     }
 
-    
+
     /**
      * @brief Clicks on the main stage (eventually) get passed here
      * Dispatch to as many Models as need it

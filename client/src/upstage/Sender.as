@@ -410,6 +410,12 @@ class upstage.Sender
 		this.send('ROTATE_AVATAR');
 	}
 
+    // Toggle audio of streaming avatar
+    function TOGGLE_STREAM_AUDIO(isMuted:Number)
+    {
+        this.send('TOGGLE_STREAM_AUDIO', 'isMuted', isMuted);
+    }
+
     /**
      * @brief Client finished loading images
      */

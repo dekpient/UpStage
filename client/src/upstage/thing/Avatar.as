@@ -31,21 +31,21 @@ import upstage.util.Construct;
 import upstage.util.LoadTracker;
 
 /**
- * Author: 
+ * Author:
  * Modified by: Endre Bernhardt, Alan Crow (AC)
  * Modified by: Wendy, Candy and Aaron 30/10/2008
  * Purpose: Class for Avatars
- * Notes: 
+ * Notes:
  * Modified by: Heath Behrens & Vibhu Patel 08/08/2011 - Modified function calcSize() line 164 to scale
- *                                                       avatar on stage. 
+ *                                                       avatar on stage.
  */
- 
+
 class upstage.thing.Avatar extends Thing
 {
     public var icon      :AvScrollBarItem;
     public var prop      :Prop = null;
     private var bubble   :Bubble;
-    
+
     //name text field.
     public var tf           :TextField;
     public var tfBG		 :MovieClip;
@@ -76,31 +76,34 @@ class upstage.thing.Avatar extends Thing
 	// Added by Daniel
 	private var rotation:Number = 0;
 	private var scale:Number = 1;
-	
+
 	// Daniel 13/09/2012	- For drawable avatar.
 	public var drawable:MovieClip;
-	
+
+    // for identifying streaming avatar - Ing - 28/8/13
+    public var isStream:Boolean;
+
     private static var symbolName:String = "__Packages.upstage.thing.Avatar";
     private static var symbolLinked:Boolean = Object.registerClass(symbolName, Avatar);
 
-    
+
     /**
      * @brief factory.  This function gives you the object.
      */
-  
+
     public static function factory(parent: MovieClip, ID :Number, name :String, url :String,
                                    thumbnail :String, medium :String,
                                    scrollBar: AvScrollBar, available:Boolean, frame: Number,
                                    streamserver :String, streamname :String):Avatar
     {
         //trace("Avatar factory");
-        var baseLayer:Number = Client.L_AV_IMG -(-ID * Client.AV_IMG_LAYERS); 
+        var baseLayer:Number = Client.L_AV_IMG -(-ID * Client.AV_IMG_LAYERS);
     	var baseName: String = 'avwrap_' + ID;
 
-        var thing: Thing = Thing.factory(ID, name, url, baseName, 
+        var thing: Thing = Thing.factory(ID, name, url, baseName,
                                          thumbnail, medium, baseLayer, parent, Avatar,
                                          streamserver, streamname);
-        
+
         var av:Avatar = Avatar(thing);
         //name text field
         av.tfLayer = Client.L_AV_NAME + ID;
@@ -108,10 +111,12 @@ class upstage.thing.Avatar extends Thing
         av.layerOffset = 1;
         av.frameNumber = frame;
         //trace(['av', baseLayer, 'name', av.tfLayer]);
-        
-        if (scrollBar){            
+
+        av.isStream = !!(streamname && streamserver);
+
+        if (scrollBar){
             // set up icon
-            av.iconLayer = Client.L_AV_ICON -(-ID * Client.AV_ICON_LAYERS); 
+            av.iconLayer = Client.L_AV_ICON -(-ID * Client.AV_ICON_LAYERS);
             av.icon = AvScrollBarItem.create(av, scrollBar, available);
         }
 
@@ -135,13 +140,13 @@ class upstage.thing.Avatar extends Thing
      */
     public function finalise(){
         //trace("finalising avatar ID " + ID + " obj " + this);
-        
+
 		//ENDRE - tfBG is a white rectangle behind the textfield displaying the avatar's name
-        
+
         this.tfBG = this.createEmptyMovieClip(this.tfName+"bg", this.getNextHighestDepth());
         this.tfBG._x = this.nameX;
         this.tfBG._y = this.nameY+2;
-        
+
         Construct.rectangle(this.tfBG, 0, 0, Client.TF_WIDTH, 8,
                       0xFFFFFF, 0xFFFFFF, 0, 20);
 
@@ -152,8 +157,8 @@ class upstage.thing.Avatar extends Thing
         this.frame(this.frameNumber);
         this.tfBG._visibility = false;
 		this.drawable = this.createEmptyMovieClip(this.tfName + "_drawable", this.getNextHighestDepth());
-		
-		
+
+
         super.finalise();
     }
 
@@ -162,20 +167,20 @@ class upstage.thing.Avatar extends Thing
      */
     function setUpTextField() :Void
     {
-        createTextField(this.tfName, this.tfLayer, this.nameX, this.nameY, 
+        createTextField(this.tfName, this.tfLayer, this.nameX, this.nameY,
                         Client.TF_WIDTH, Client.TF_HEIGHT);
-        this.tf = this[this.tfName]; 	
+        this.tf = this[this.tfName];
 
         var format :TextFormat = Construct.textFormat(1.2, true);
         format.align = 'center';
         this.tf.setNewTextFormat(format);
-        //this.tf.text = this.name;	
+        //this.tf.text = this.name;
         this.tf.embedFonts = true;
     }
 
 
     /**
-     * @brief calcSizes -- works out the positions of things from the size 
+     * @brief calcSizes -- works out the positions of things from the size
      * of the current image.
      * Modified by heath & Vibhu 08/08/2011 - Aded line 168 to scale avatar on stage
      *
@@ -210,7 +215,7 @@ class upstage.thing.Avatar extends Thing
 		/* Need to assign avatars y position in bubble class. */
 		this.bubble.setText(text);
     	this.bubble.av_pos_y = this._y;
-    	
+
     	this.bubble.speak(text);
     };
 
@@ -219,20 +224,20 @@ class upstage.thing.Avatar extends Thing
     	// AC - DATE - Updates the neccesary bubble values
     	this.bubble.setText(text);
     	this.bubble.av_pos_y = this._y;
-    	
+
         this.bubble.think(text);
     };
-    
+
      /**
      * Shout Feature
-     * Wendy, Candy and Aaron 
+     * Wendy, Candy and Aaron
      * 30/10/08
      */
     function shout(text :String) :Void
     {
     	this.bubble.setText(text);
     	this.bubble.av_pos_y = this._y;
-    	
+
         this.bubble.shout(text);
     };
 
@@ -251,19 +256,19 @@ class upstage.thing.Avatar extends Thing
         trace("centreX is"+ this.centreX +", centreY " + this.centreY);
         this._x = x - this.centreX;
         this._y = y - this.centreY;
-        
+
         this.show();
 
         // Move prop as well
         if (this.prop) {
             this.prop.setPosition(this._x, this._y);
         }
-        
+
         // AC - Update bubbles record of avatar y position
         this.bubble.av_pos_y = this._y;
-        			
+
         // AC - DATE - Determine if the avatars bubble has gone off the top of the screen.
-        if (this.bubble.isBubbleOffScreen(this._y)) 
+        if (this.bubble.isBubbleOffScreen(this._y))
         	{ this.bubble.moveBubbleBelow(); }
         else
         	{ this.bubble.moveBubbleAbove(); }
@@ -293,8 +298,8 @@ class upstage.thing.Avatar extends Thing
         this.stepping = setInterval(Avatar.avatarStep, Client.AV_STEP_TIME, this);
         trace("duration: " + duration + "  steps " + steps +" dx " + dx +" dy " + dy);
     };
-	
-	
+
+
 
 
     /**
@@ -317,7 +322,7 @@ class upstage.thing.Avatar extends Thing
         if (this.tf != null)
             this.tf.text = name;
             this.tf.autosize = "center";
-            
+
         if (this.icon != null){
             this.icon.nameof = name; //XXX why such duplication?
             this.icon.nameField.text = name;
@@ -333,11 +338,11 @@ class upstage.thing.Avatar extends Thing
 		this.baseLayer = Number(this.baseLayer) + Number(offset);
 		return Number(this.baseLayer);
 	}
-	
+
 	/**
 	 * @brief Move the avatar down a layer
 	 */
-	
+
 	function move_down():Number
 	{
 		var offset:Number = Number(10);
@@ -360,7 +365,7 @@ class upstage.thing.Avatar extends Thing
     function frame(number: Number)
     {
     	this.frameNumber = number;
-    	
+
         if (number == 0)
             {
                 this.image.play();
@@ -382,8 +387,8 @@ class upstage.thing.Avatar extends Thing
     {
         if (this.tf != null){
             this.tf._visible = showName;
-            this.tfBG._visible = showName;	
-        }	
+            this.tfBG._visible = showName;
+        }
     }
 
     /**
@@ -405,7 +410,7 @@ class upstage.thing.Avatar extends Thing
     function holdProp(prop :Prop) :Void
     {
         // Drop existing prop
-        trace("av  " + this + " .holdProp with " + prop); 
+        trace("av  " + this + " .holdProp with " + prop);
 
         this.dropProp();
         this.prop = prop;
@@ -431,7 +436,7 @@ class upstage.thing.Avatar extends Thing
     function dropIfHeld(check :Prop) :Void
     {
         if (this.prop == check){
-            trace("av " + this + "is dropping the prop" + check); 
+            trace("av " + this + "is dropping the prop" + check);
             this.dropProp();
         }
     };
@@ -448,7 +453,7 @@ class upstage.thing.Avatar extends Thing
 
 
     /**
-     * @brief 
+     * @brief
      * Makes a step, set up by moveToward. note the staticness.
      */
     static function avatarStep(av: Avatar) :Void
@@ -463,41 +468,41 @@ class upstage.thing.Avatar extends Thing
                 // Prop clings to avatar
                 av.prop.setPosition(av._x, av._y);
             }
-        		
+
 			// Check if bubble adjust is needed only if bubble is showing.
        		if (av.bubble.isVisible())
         	{
         		// update bubbles record of avatar y position
         		av.bubble.av_pos_y = av._y;
-        	
-				/* Check if bubble adjust is necessary upon each avatar step and 
-				 * adjust only once when needed so as to not continue to 'repaint' 
+
+				/* Check if bubble adjust is necessary upon each avatar step and
+				 * adjust only once when needed so as to not continue to 'repaint'
 				 * the bubble on each step. */
         		if ((av.bubble.isBubbleOffScreen(av._y)) && (av.bubble.location == 'Above'))
 					{ av.bubble.moveBubbleBelow(); }
-					
+
 				// Is moving bubble above when it is below
 				else if ((av.bubble.location == 'Below') && (!(av.bubble.isBubbleOffScreen(av._y))))
         			{ av.bubble.moveBubbleAbove(); }
         	}
-        	
+
         }
         else{
             //trace('got there');
             av.stopWalk();
         }
     }
-	
+
 	/**
 	 * @author Daniel Han (15/09/2012)
 	 * @param	angle
 	 * @brief	Rotation function which only rotates actual images not Avatar object.
 	 */
 	function setRotation(angle:Number)
-	{		
+	{
 		trace("ROTATING");
 		rotation = (rotation + angle) % 360;
-		
+
 		// Rotate Image
 		var myMat:Matrix = new Matrix();
 		myMat.translate( -centreX / scale, -centreY / scale);
@@ -506,7 +511,7 @@ class upstage.thing.Avatar extends Thing
 		myMat.translate((centreX / scale), (centreY / scale));
 		myMat.scale(scale, scale);
 		image.transform.matrix = myMat;
-		
+
 		// Rotate Drawing
 		var drawMat:Matrix = new Matrix();
 		drawMat.identity();
@@ -515,7 +520,7 @@ class upstage.thing.Avatar extends Thing
 		drawMat.rotate((rotation / 180) * Math.PI);
 		drawMat.translate((centreX), (centreY));
 		drawable.transform.matrix = drawMat;
-		
+
 	}
 
     /**
@@ -534,7 +539,7 @@ class upstage.thing.Avatar extends Thing
         return this.tf._visible;
     }
 
-	
+
     /**
      * @brief Constuctor, empty, but not removable. dumb actionscript.
      */
